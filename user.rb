@@ -1,4 +1,4 @@
-require 'active_record'
+require 'activerecord'
 require 'sqlite3'
 require 'logger'
 
