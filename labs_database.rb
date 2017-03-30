@@ -8,11 +8,11 @@ class LabsDatabase
   end
 
   def new_users_with_edits(max_edit_count: 5)
-    @client.query(
-      "SELECT * FROM user
+    @client.query("
+      SELECT * FROM user
       WHERE user_editcount < #{max_edit_count}
       ORDER BY user_id DESC
-      LIMIT 100"
-    )
+      LIMIT 100
+    ")
   end
 end
