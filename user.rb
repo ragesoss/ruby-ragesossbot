@@ -10,7 +10,8 @@ require 'logger'
 ActiveRecord::Base.logger = Logger.new('debug.log')
 ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
-  database: 'ragesossbot.sqlite3'
+  database: 'ragesossbot.sqlite3',
+  encoding: 'utf8'
 )
 
 class User < ActiveRecord::Base
