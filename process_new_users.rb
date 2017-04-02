@@ -8,7 +8,7 @@ class ProcessNewUsers
 
   def import_users
     user_rows = @database.new_users_with_edits(limit: @count)
-    users = user_rows.maps do |user_row|
+    users = user_rows.map do |user_row|
       next if User.exists?(username: user_row['user_name'])
       User.new(
         username: user_row['user_name'],
