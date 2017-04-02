@@ -11,9 +11,10 @@ class ProcessNewUsers
   def import_users
     user_rows = @database.new_users_with_edits(limit: @count)
     users = user_rows.map do |user_row|
-      next if User.exists?(username: user_row['user_name'].force_encoding('UTF-8'))
+      username = user_row['user_name'].force_encoding('UTF-8')
+      next if User.exists?(username: username)
       User.new(
-        username: user_row['user_name'],
+        username: username,
         registration: DateTime.parse(user_row['user_registration'])
       )
     end.compact
