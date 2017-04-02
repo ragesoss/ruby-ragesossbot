@@ -7,6 +7,35 @@ class ProcessNewUsers
   end
 
   def import_users
-    users = @database.new_users_with_edits
+    user_rows = @database.new_users_with_edits(limit: @count)
+    users = user_rows.maps do |user_row|
+      next if User.exists?(username: user_row['user_name'])
+      User.new(
+        username: user_row['user_name'],
+        registration: DateTime.parse(user_row['user_registration'])
+      )
+    end.compact
+    # Make sure we have an even number
+    users.pop unless users.length.even?
+
+    # Divide into two random groups
+    users.shuffle!
+    users_in_two_groups = users.in_groups(2)
+    experimental_group = users_in_two_groups[0]
+    control_group = users_in_two_groups[1]
+
+    pp 'EXPERIMENTAL GROUP'
+    experimental_group.each do |user|
+      user.condition = 'experiment'
+      # user.save
+      pp user.username
+    end
+
+    pp 'CONTROL_GROUP'
+    control_group.each do |user|
+      user.condition = 'control'
+      # user.save
+      pp user.username
+    end
   end
 end
