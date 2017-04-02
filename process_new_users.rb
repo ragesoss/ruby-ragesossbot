@@ -24,7 +24,7 @@ class ProcessNewUsers
     users.shuffle!
     users_in_two_groups = users.in_groups(2)
     experimental_group = users_in_two_groups[0]
-    control_group = users_in_two_greoups[1]
+    control_group = users_in_two_groups[1]
 
     pp 'EXPERIMENTAL GROUP'
     experimental_group.each do |user|
