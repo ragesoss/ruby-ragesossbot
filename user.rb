@@ -15,4 +15,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 class User < ActiveRecord::Base
+  def talk_page
+    "User_talk:#{username}"
+  end
 end

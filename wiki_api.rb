@@ -53,7 +53,7 @@ class WikiApi
     mediawiki_edit params
   end
 
-  def add_new_section(page_title, message)
+  def add_new_section(page_title, message, dry_run: true)
     params = { title: page_title,
                section: 'new',
                sectiontitle: message[:sectiontitle],
@@ -61,7 +61,7 @@ class WikiApi
                summary: message[:summary],
                format: 'json' }
 
-    mediawiki_edit params
+    mediawiki_edit params, dry_run
   end
 
   def add_to_page_top(page_title, content, summary)
@@ -78,8 +78,12 @@ class WikiApi
   ###################
   private
 
-  def mediawiki_edit(params)
-    @client.action :edit, params
+  def mediawiki_edit(params, dry_run: false)
+    if dry_run
+      pp params
+    else
+      @client.action :edit, params
+    end
   end
 
   def mediawiki(action, query)
