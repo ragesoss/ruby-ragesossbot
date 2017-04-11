@@ -61,7 +61,7 @@ class WikiApi
                summary: message[:summary],
                format: 'json' }
 
-    mediawiki_edit params, dry_run
+    mediawiki_edit params, dry_run: dry_run
   end
 
   def add_to_page_top(page_title, content, summary)
