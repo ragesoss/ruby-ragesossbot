@@ -43,7 +43,7 @@ class ProcessNewUsers
       pp user.username
     end
 
-    add_talk_page_template_for_control_group
+    add_talk_page_template_for_experimental_group
   end
 
   def add_talk_page_template_for_experimental_group
