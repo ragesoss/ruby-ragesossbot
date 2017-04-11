@@ -49,7 +49,8 @@ class ProcessNewUsers
   def add_talk_page_template_for_experimental_group
     @experimental_group.each do |user|
       add_template_to_talk_page user
-      user.update_attribute(invited: true)
+      pp "#{user.username} invited"
+      # user.update_attribute(:invited, true)
       sleep 1
     end
   end
