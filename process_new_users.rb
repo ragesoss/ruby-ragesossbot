@@ -8,9 +8,13 @@ class ProcessNewUsers
     @count = count
     @database = LabsDatabase.new
     @wiki_api = WikiApi.new
+    @max_experiment_size = 20
   end
 
   def import_users(dry_run: true)
+    # Do nothing if the max experiment size has been reached already.
+    return if User.where(condition: 'experiment', invited: true).count >= @max_experiment_size
+
     # Get recently created user accounts.
     user_rows = @database.new_users_with_edits(limit: @count)
     users = user_rows.map do |user_row|
