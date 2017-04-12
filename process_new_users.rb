@@ -49,10 +49,10 @@ class ProcessNewUsers
       end
     end
 
-    add_talk_page_template_for_experimental_group
+    add_talk_page_template_for_experimental_group(dry_run: dry_run)
   end
 
-  def add_talk_page_template_for_experimental_group
+  def add_talk_page_template_for_experimental_group(dry_run:)
     @experimental_group.each do |user|
       add_template_to_talk_page(user.talk_page, dry_run: dry_run)
       pp "#{user.username} invited"
