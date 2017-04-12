@@ -48,19 +48,18 @@ class ProcessNewUsers
 
   def add_talk_page_template_for_experimental_group
     @experimental_group.each do |user|
-      add_template_to_talk_page user
+      add_template_to_talk_page user.talk_page
       pp "#{user.username} invited"
       # user.update_attribute(:invited, true)
       sleep 1
     end
   end
 
-  def add_template_to_talk_page(user)
-    talk_page = user.talk_page
+  def add_template_to_talk_page(talk_page)
     message = {
-      sectiontitle: '',
-      text: '',
-      summary: ''
+      sectiontitle: '{{subst:PAGENAME}}, welcome to Wikipedia!',
+      text: '{{Welcome training modules|signed=~~~~}}',
+      summary: 'invitation to try training modules'
     }
     @wiki_api.add_new_section(talk_page, message, dry_run: true)
   end
