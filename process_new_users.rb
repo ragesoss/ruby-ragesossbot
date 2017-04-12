@@ -10,7 +10,7 @@ class ProcessNewUsers
     @wiki_api = WikiApi.new
   end
 
-  def import_users
+  def import_users(dry_run: true)
     user_rows = @database.new_users_with_edits(limit: @count)
     users = user_rows.map do |user_row|
       username = user_row['user_name'].force_encoding('UTF-8')
@@ -32,15 +32,21 @@ class ProcessNewUsers
     pp 'EXPERIMENTAL GROUP'
     @experimental_group.each do |user|
       user.condition = 'experiment'
-      # user.save
-      pp user.username
+      if dry_run
+        pp user.username
+      else
+        user.save
+      end
     end
 
     pp 'CONTROL_GROUP'
     @control_group.each do |user|
       user.condition = 'control'
-      # user.save
-      pp user.username
+      if dry_run
+        pp user.username
+      else
+        user.save
+      end
     end
 
     add_talk_page_template_for_experimental_group
@@ -48,9 +54,9 @@ class ProcessNewUsers
 
   def add_talk_page_template_for_experimental_group
     @experimental_group.each do |user|
-      add_template_to_talk_page user.talk_page
+      add_template_to_talk_page(user.talk_page, dry_run: dry_run)
       pp "#{user.username} invited"
-      # user.update_attribute(:invited, true)
+      user.update_attribute(:invited, true) unless dry_run
       sleep 1
     end
   end
