@@ -55,12 +55,12 @@ class ProcessNewUsers
     end
   end
 
-  def add_template_to_talk_page(talk_page)
+  def add_template_to_talk_page(talk_page, dry_run: true)
     message = {
       sectiontitle: '{{subst:PAGENAME}}, welcome to Wikipedia!',
       text: '{{Welcome training modules|signed=~~~~}}',
       summary: 'invitation to try training modules'
     }
-    @wiki_api.add_new_section(talk_page, message, dry_run: true)
+    @wiki_api.add_new_section(talk_page, message, dry_run: dry_run)
   end
 end
