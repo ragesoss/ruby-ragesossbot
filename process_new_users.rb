@@ -11,6 +11,7 @@ class ProcessNewUsers
   end
 
   def import_users(dry_run: true)
+    # Get recently created user accounts.
     user_rows = @database.new_users_with_edits(limit: @count)
     users = user_rows.map do |user_row|
       username = user_row['user_name'].force_encoding('UTF-8')
@@ -20,25 +21,16 @@ class ProcessNewUsers
         registration: DateTime.parse(user_row['user_registration'])
       )
     end.compact
+
     # Make sure we have an even number
     users.pop unless users.length.even?
-
     # Divide into two random groups
     users.shuffle!
     users_in_two_groups = users.in_groups(2)
     @experimental_group = users_in_two_groups[0]
     @control_group = users_in_two_groups[1]
 
-    pp 'EXPERIMENTAL GROUP'
-    @experimental_group.each do |user|
-      user.condition = 'experiment'
-      if dry_run
-        pp user.username
-      else
-        user.save
-      end
-    end
-
+    # Handle the control group: save the user records and mark them as 'control'
     pp 'CONTROL_GROUP'
     @control_group.each do |user|
       user.condition = 'control'
@@ -49,6 +41,17 @@ class ProcessNewUsers
       end
     end
 
+    # Handle the experimental group: mark them as experiment, then add the
+    # template to their talk pages.
+    pp 'EXPERIMENTAL GROUP'
+    @experimental_group.each do |user|
+      user.condition = 'experiment'
+      if dry_run
+        pp user.username
+      else
+        user.save
+      end
+    end
     add_talk_page_template_for_experimental_group(dry_run: dry_run)
   end
 
