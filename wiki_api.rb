@@ -40,10 +40,6 @@ class WikiApi
     response.status == 200 ? response.data : nil
   end
 
-  ####################
-  # Basic edit types #
-  ####################
-
   def post_whole_page(page_title, content, summary = nil)
     params = { title: page_title,
                text: content,
@@ -73,12 +69,25 @@ class WikiApi
     mediawiki_edit params
   end
 
+  ##############################################
+  # English Wikipedia bot exclusion compliance #
+  ##############################################
+
+  def bots_disallowed?(page_title)
+    content = get_page_content(page_title)
+    return false if content.nil?
+    # Treat any instance of the bots template as disallowing this bot.
+    return true if content =~ /{{(no)?bots/
+    false
+  end
+
   ###################
   # Private methods #
   ###################
   private
 
   def mediawiki_edit(params, dry_run: false)
+    return if bots_disallowed?(params['title'])
     if dry_run
       pp params
     else
